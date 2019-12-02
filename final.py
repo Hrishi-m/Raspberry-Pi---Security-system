@@ -72,7 +72,7 @@ def rfid():
     id,text=reader.read()
     chat_id=669801266
     now= datetime.datetime.now()
-    bot = telegram.Bot(token='719915683:AAFwnsG5a7AWNB5adqvp2uNRq8bkteGaIMU') #Enter your token here.
+    bot = telegram.Bot(token='Your telegram token here') #Enter your token here.
     print (bot.getMe())
 
     if id==626081541925:
