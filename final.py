@@ -8,6 +8,7 @@ from time import sleep
 GPIO.setwarnings(False)
 GPIO.setmode(GPIO.BCM)
 
+#For setting up Pi camera
 camera = PiCamera()
 
 def cap():
@@ -17,10 +18,12 @@ def cap():
     sleep(1)
     camera.capture('/home/pi/Desktop/image.jpg')
 
+#For setting up motor
 coil_A_1_pin = 27 # pink
 coil_A_2_pin = 22 # orange
 coil_B_1_pin = 5 # blue
-coil_B_2_pin = 6 # yellow 
+coil_B_2_pin = 6 # yellow
+
 # adjust if different
 StepCount = 8
 Seq = range(0, StepCount)
@@ -32,7 +35,7 @@ Seq[4] = [0,0,1,0]
 Seq[5] = [0,0,1,1]
 Seq[6] = [0,0,0,1]
 Seq[7] = [1,0,0,1]
- 
+
 #GPIO.setup(enable_pin, GPIO.OUT)
 GPIO.setup(coil_A_1_pin, GPIO.OUT)
 GPIO.setup(coil_A_2_pin, GPIO.OUT)
@@ -40,25 +43,25 @@ GPIO.setup(coil_B_1_pin, GPIO.OUT)
 GPIO.setup(coil_B_2_pin, GPIO.OUT)
 
 #GPIO.output(enable_pin, 1)
- 
 def setStep(w1, w2, w3, w4):
     GPIO.output(coil_A_1_pin, w1)
     GPIO.output(coil_A_2_pin, w2)
     GPIO.output(coil_B_1_pin, w3)
     GPIO.output(coil_B_2_pin, w4)
- 
+
 def forward(delay, steps):
     for i in range(steps):
         for j in range(StepCount):
             setStep(Seq[j][0], Seq[j][1], Seq[j][2], Seq[j][3])
             time.sleep(delay)
- 
+
 def backwards(delay, steps):
     for i in range(steps):
         for j in reversed(range(StepCount)):
             setStep(Seq[j][0], Seq[j][1], Seq[j][2], Seq[j][3])
             time.sleep(delay)
 
+#Setting up RFID functions
 reader=SimpleMFRC522.SimpleMFRC522()
 
 GPIO.setup(4, GPIO.IN)
@@ -69,7 +72,7 @@ def rfid():
     id,text=reader.read()
     chat_id=669801266
     now= datetime.datetime.now()
-    bot = telegram.Bot(token='719915683:AAFwnsG5a7AWNB5adqvp2uNRq8bkteGaIMU')
+    bot = telegram.Bot(token='719915683:AAFwnsG5a7AWNB5adqvp2uNRq8bkteGaIMU') #Enter your token here.
     print (bot.getMe())
 
     if id==626081541925:
@@ -88,7 +91,7 @@ def rfid():
                 steps = 128
                 backwards(int(delay) / 1000.0, int(steps))
                 break
-            
+
         time.sleep(2.5)
         bot.sendPhoto (chat_id=chat_id, photo=open('/home/pi/Desktop/image.jpg'))
 
@@ -122,6 +125,3 @@ except KeyboardInterrupt:
     pass
 finally:
     GPIO.cleanup()
-           
-
-            
